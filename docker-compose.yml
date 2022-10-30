@@ -1,0 +1,26 @@
+version: "3.7"
+services:
+  mysql-service:
+    image: mysql:5.7
+    networks:
+      - spring-boot-mysql-network
+    restart: always
+    command: --character-set-server=utf8 --collation-server=utf8_general_ci
+    ports:
+      - "8091:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=ispassword
+      - MYSQL_DATABASE=flash_sale
+  be-service:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    ports:
+      - "8090:8090"
+    networks:
+      - spring-boot-mysql-network
+    depends_on:
+      - mysql-service
+networks:
+  spring-boot-mysql-network:
+    driver: bridge
